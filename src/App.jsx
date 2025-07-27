@@ -2,11 +2,31 @@ import { useState } from "react";
 import styles from "./App.module.css";
 import { useEffect } from "react";
 
+const MOCK_DATA = [
+  {
+    id: "001",
+    name: "4K Smart TV Samsung 55",
+    price: 749,
+  },
+  {
+    id: "002",
+    name: "iPhone 16 Pro Max 1024GB",
+    price: 999,
+  },
+  {
+    id: "003",
+    name: "Dyson Supersonic Hair Dryer",
+    price: 429,
+  },
+];
+
 function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("https://mocki.io/v1/1926ecc2-5595-4544-9673-f03e25e09494")
+    new Promise((resolve) => {
+      resolve({ json: () => MOCK_DATA });
+    })
       .then((responce) => responce.json())
       .then((data) => {
         setProducts(data);
