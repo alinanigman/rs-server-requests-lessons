@@ -3,9 +3,8 @@ import { ref, onValue } from "firebase/database";
 import { db } from "../firebase";
 export const useRequestGetProducts = () => {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    setIsLoading(true);
     const productsRef = ref(db, "products");
     return onValue(productsRef, (snapshot) => {
       const data = snapshot.val();
