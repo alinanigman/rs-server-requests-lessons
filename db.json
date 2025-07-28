@@ -14,6 +14,21 @@
       "id": "003",
       "name": "Dyson Supersonic Hair Dryer",
       "price": 429
+    },
+    {
+      "id": "004",
+      "name": "Sony WH-1000XM5 Headphones",
+      "price": 349
+    },
+    {
+      "id": "005",
+      "name": "Apple MacBook Pro 16-inch",
+      "price": 2399
+    },
+    {
+      "id": "006",
+      "name": "Samsung Galaxy S23 Ultra",
+      "price": 1199
     }
   ]
 }
