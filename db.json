@@ -29,6 +29,11 @@
       "id": "006",
       "name": "Samsung Galaxy S23 Ultra",
       "price": 1199
+    },
+    {
+      "name": "New Product",
+      "price": 22,
+      "id": "hqMKHik"
     }
   ]
 }

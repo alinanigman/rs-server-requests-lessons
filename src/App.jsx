@@ -5,9 +5,12 @@ import { useEffect } from "react";
 function App() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshProducts, setRefreshProducts] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleAddProduct = () => {
     console.log("Adding new product...");
+    setIsUpdating(true);
     const newProduct = {
       name: "New Product",
       price: Math.floor(Math.random() * 100) + 1,
@@ -21,7 +24,10 @@ function App() {
       .then((res) => res.json())
       .then((createdProduct) => {
         console.log("Created product:", createdProduct);
-        setProducts([...products, createdProduct]);
+        setRefreshProducts(!refreshProducts);
+      })
+      .finally(() => {
+        setIsUpdating(false);
       });
   };
 
@@ -35,12 +41,14 @@ function App() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [refreshProducts]);
   return (
     <div className={styles.App}>
       <div className={styles.header}>
         <h1>Products</h1>
-        <button onClick={handleAddProduct}>Add new</button>
+        <button disabled={isUpdating} onClick={handleAddProduct}>
+          Add new
+        </button>
       </div>
       <div className={styles.list}>
         {isLoading ? (
