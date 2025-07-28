@@ -11,7 +11,7 @@ function App() {
   const [refreshProductsFlag, setRefreshProductsFlag] = useState(false);
   const refreshProducts = () => setRefreshProductsFlag(!refreshProductsFlag);
 
-  const { products, isLoading } = useRequestGetProducts(refreshProductsFlag);
+  const { products, isLoading } = useRequestGetProducts();
 
   const { isCreating, requestAddProduct } =
     useRequestAddProduct(refreshProducts);

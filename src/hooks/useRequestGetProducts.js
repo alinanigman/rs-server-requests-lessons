@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-export const useRequestGetProducts = (refreshProductsFlag) => {
+import { ref, onValue } from "firebase/database";
+import { db } from "../firebase";
+export const useRequestGetProducts = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     setIsLoading(true);
-    fetch("http://localhost:3000/products")
-      .then((responce) => responce.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [refreshProductsFlag]);
+    const productsRef = ref(db, "products");
+    return onValue(productsRef, (snapshot) => {
+      const data = snapshot.val();
+      const productsArray = data
+        ? Object.keys(data).map((key) => ({ id: key, ...data[key] }))
+        : [];
+      setProducts(productsArray);
+      setIsLoading(false);
+    });
+  }, []);
   return {
     products,
     isLoading,
