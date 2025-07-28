@@ -1,5 +1,7 @@
 import { useState } from "react";
-export const useRequestDeleteProduct = (products, refreshProducts) => {
+import { ref, remove } from "firebase/database";
+import { db } from "../firebase";
+export const useRequestDeleteProduct = (products) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const requestDeleteProduct = (productId) => {
     console.log("Deleting product...", productId);
@@ -8,13 +10,13 @@ export const useRequestDeleteProduct = (products, refreshProducts) => {
     const selectedProduct = products.find((p) => p.id === productId);
     console.log("Selected product:", selectedProduct);
 
-    fetch(`http://localhost:3000/products/${productId}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-    })
-      .then((res) => {
-        console.log("Deleted product res:", res);
-        refreshProducts();
+    const productRef = ref(db, `products/${productId}`);
+    remove(productRef)
+      .then(() => {
+        console.log("Product deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting product:", error);
       })
       .finally(() => {
         setIsDeleting(false);
