@@ -1,5 +1,7 @@
 import { useState } from "react";
-export const useRequestAddProduct = (refreshProducts) => {
+import { ref, push } from "firebase/database";
+import { db } from "../firebase";
+export const useRequestAddProduct = () => {
   const [isCreating, setIsCreating] = useState(false);
 
   const requestAddProduct = () => {
@@ -10,15 +12,10 @@ export const useRequestAddProduct = (refreshProducts) => {
       price: Math.floor(Math.random() * 100) + 1,
     };
 
-    fetch("http://localhost:3000/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-      body: JSON.stringify(newProduct),
-    })
-      .then((res) => res.json())
-      .then((createdProduct) => {
-        console.log("Created product:", createdProduct);
-        refreshProducts();
+    const productsRef = ref(db, "products");
+    push(productsRef, newProduct)
+      .then((response) => {
+        console.log("Created product:", response);
       })
       .finally(() => {
         setIsCreating(false);
