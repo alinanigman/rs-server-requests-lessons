@@ -22,8 +22,10 @@ const MOCK_DATA = [
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     new Promise((resolve) => {
       setTimeout(() => {
         resolve({ json: () => MOCK_DATA });
@@ -32,20 +34,27 @@ function App() {
       .then((responce) => responce.json())
       .then((data) => {
         setProducts(data);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
   return (
     <div className={styles.App}>
       <h1>Products</h1>
       <div className={styles.list}>
-        {products.map((product) => (
-          <>
-            <div key={product.id} className={styles.product}>
-              <b>{product.name}</b>
-            </div>
-            <div>${product.price}</div>
-          </>
-        ))}
+        {isLoading ? (
+          <div className={styles.loader}></div>
+        ) : (
+          products.map((product) => (
+            <>
+              <div key={product.id} className={styles.product}>
+                <b>{product.name}</b>
+              </div>
+              <div>${product.price}</div>
+            </>
+          ))
+        )}
       </div>
     </div>
   );
