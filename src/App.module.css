@@ -38,6 +38,27 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
+.product {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.productHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.productHeader button {
+    padding: 0;
+    height: 28px;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
   
 @keyframes spin {
     0% {

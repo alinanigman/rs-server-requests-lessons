@@ -31,6 +31,30 @@ function App() {
       });
   };
 
+  const handleUpdateProduct = (productId) => {
+    console.log("Updating product...", productId);
+    setIsUpdating(true);
+
+    const selectedProduct = products.find((p) => p.id === productId);
+    console.log("Selected product:", selectedProduct);
+    fetch(`http://localhost:3000/products/${productId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json;charset=UTF-8" },
+      body: JSON.stringify({
+        ...selectedProduct,
+        price: selectedProduct.price - Math.floor(Math.random() * 10) + 1,
+      }),
+    })
+      .then((res) => res.json())
+      .then((updatedProduct) => {
+        console.log("Updated product:", updatedProduct);
+        setRefreshProducts(!refreshProducts);
+      })
+      .finally(() => {
+        setIsUpdating(false);
+      });
+  };
+
   useEffect(() => {
     setIsLoading(true);
     fetch("http://localhost:3000/products")
@@ -55,11 +79,19 @@ function App() {
           <div className={styles.loader}></div>
         ) : (
           products.map((product) => (
-            <div className={styles.item} key={product.id}>
-              <div className={styles.product}>
+            <div className={styles.product} key={product.id}>
+              <div className={styles.productHeader}>
                 <b>{product.name}</b>
+                <button
+                  disabled={isUpdating}
+                  onClick={() => handleUpdateProduct(product.id)}
+                >
+                  <span role="img" aria-label="update">
+                    🔄
+                  </span>
+                </button>
               </div>
-              <div>${product.price}</div>
+              <div className={styles.productPrice}>${product.price}</div>
             </div>
           ))
         )}
