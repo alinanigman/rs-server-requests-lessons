@@ -19,7 +19,10 @@ function App() {
   }, []);
   return (
     <div className={styles.App}>
-      <h1>Products</h1>
+      <div className={styles.header}>
+        <h1>Products</h1>
+        <button>Add new</button>
+      </div>
       <div className={styles.list}>
         {isLoading ? (
           <div className={styles.loader}></div>
