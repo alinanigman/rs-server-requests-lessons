@@ -37,6 +37,7 @@ function App() {
 
     const selectedProduct = products.find((p) => p.id === productId);
     console.log("Selected product:", selectedProduct);
+
     fetch(`http://localhost:3000/products/${productId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -48,6 +49,26 @@ function App() {
       .then((res) => res.json())
       .then((updatedProduct) => {
         console.log("Updated product:", updatedProduct);
+        setRefreshProducts(!refreshProducts);
+      })
+      .finally(() => {
+        setIsUpdating(false);
+      });
+  };
+
+  const handleDeleteProduct = (productId) => {
+    console.log("Deleting product...", productId);
+    setIsUpdating(true);
+
+    const selectedProduct = products.find((p) => p.id === productId);
+    console.log("Selected product:", selectedProduct);
+
+    fetch(`http://localhost:3000/products/${productId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json;charset=UTF-8" },
+    })
+      .then((res) => {
+        console.log("Deleted product res:", res);
         setRefreshProducts(!refreshProducts);
       })
       .finally(() => {
@@ -82,14 +103,24 @@ function App() {
             <div className={styles.product} key={product.id}>
               <div className={styles.productHeader}>
                 <b>{product.name}</b>
-                <button
-                  disabled={isUpdating}
-                  onClick={() => handleUpdateProduct(product.id)}
-                >
-                  <span role="img" aria-label="update">
-                    🔄
-                  </span>
-                </button>
+                <div className={styles.productActions}>
+                  <button
+                    disabled={isUpdating}
+                    onClick={() => handleUpdateProduct(product.id)}
+                  >
+                    <span role="img" aria-label="update">
+                      🔄
+                    </span>
+                  </button>
+                  <button
+                    disabled={isUpdating}
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    <span role="img" aria-label="delete">
+                      🗑️
+                    </span>
+                  </button>
+                </div>
               </div>
               <div className={styles.productPrice}>${product.price}</div>
             </div>

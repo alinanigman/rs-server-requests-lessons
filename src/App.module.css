@@ -17,9 +17,10 @@
 }
 
 .list {
+    width: 100%;
     padding: 2em;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
@@ -47,7 +48,7 @@
 
 .productHeader {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
 }
 
@@ -58,6 +59,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.productActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;   
 }
   
 @keyframes spin {
