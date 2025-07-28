@@ -25,7 +25,9 @@ function App() {
 
   useEffect(() => {
     new Promise((resolve) => {
-      resolve({ json: () => MOCK_DATA });
+      setTimeout(() => {
+        resolve({ json: () => MOCK_DATA });
+      }, 2000);
     })
       .then((responce) => responce.json())
       .then((data) => {
