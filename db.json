@@ -1,0 +1,19 @@
+{
+  "products": [
+    {
+      "id": "001",
+      "name": "4K Smart TV Samsung 55",
+      "price": 749
+    },
+    {
+      "id": "002",
+      "name": "iPhone 16 Pro Max 1024GB",
+      "price": 999
+    },
+    {
+      "id": "003",
+      "name": "Dyson Supersonic Hair Dryer",
+      "price": 429
+    }
+  ]
+}
