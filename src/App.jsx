@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styles from "./App.module.css";
 import {
   useRequestGetProducts,
@@ -8,23 +7,13 @@ import {
 } from "./hooks";
 
 function App() {
-  const [refreshProductsFlag, setRefreshProductsFlag] = useState(false);
-  const refreshProducts = () => setRefreshProductsFlag(!refreshProductsFlag);
-
   const { products, isLoading } = useRequestGetProducts();
 
-  const { isCreating, requestAddProduct } =
-    useRequestAddProduct(refreshProducts);
-
-  const { isUpdating, requestUpdateProduct } = useRequestUpdateProduct(
-    products,
-    refreshProducts,
-  );
-
-  const { isDeleting, requestDeleteProduct } = useRequestDeleteProduct(
-    products,
-    refreshProducts,
-  );
+  const { isCreating, requestAddProduct } = useRequestAddProduct();
+  const { isUpdating, requestUpdateProduct } =
+    useRequestUpdateProduct(products);
+  const { isDeleting, requestDeleteProduct } =
+    useRequestDeleteProduct(products);
 
   return (
     <div className={styles.App}>

@@ -1,5 +1,7 @@
 import { useState } from "react";
-export const useRequestUpdateProduct = (products, refreshProducts) => {
+import { ref, set } from "firebase/database";
+import { db } from "../firebase";
+export const useRequestUpdateProduct = (products) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const requestUpdateProduct = (productId) => {
     console.log("Updating product...", productId);
@@ -8,18 +10,13 @@ export const useRequestUpdateProduct = (products, refreshProducts) => {
     const selectedProduct = products.find((p) => p.id === productId);
     console.log("Selected product:", selectedProduct);
 
-    fetch(`http://localhost:3000/products/${productId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-      body: JSON.stringify({
-        ...selectedProduct,
-        price: selectedProduct.price - Math.floor(Math.random() * 10) + 1,
-      }),
+    const productRef = ref(db, `products/${productId}`);
+    set(productRef, {
+      ...selectedProduct,
+      price: selectedProduct.price - Math.floor(Math.random() * 10) + 1,
     })
-      .then((res) => res.json())
-      .then((updatedProduct) => {
-        console.log("Updated product:", updatedProduct);
-        refreshProducts();
+      .then(() => {
+        console.log("Product updated successfully");
       })
       .finally(() => {
         setIsUpdating(false);
