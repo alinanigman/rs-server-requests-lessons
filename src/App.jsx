@@ -1,97 +1,36 @@
 import { useState } from "react";
 import styles from "./App.module.css";
-import { useEffect } from "react";
+import {
+  useRequestGetProducts,
+  useRequestAddProduct,
+  useRequestUpdateProduct,
+  useRequestDeleteProduct,
+} from "./hooks";
 
 function App() {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [refreshProducts, setRefreshProducts] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [refreshProductsFlag, setRefreshProductsFlag] = useState(false);
+  const refreshProducts = () => setRefreshProductsFlag(!refreshProductsFlag);
 
-  const handleAddProduct = () => {
-    console.log("Adding new product...");
-    setIsUpdating(true);
-    const newProduct = {
-      name: "New Product",
-      price: Math.floor(Math.random() * 100) + 1,
-    };
+  const { products, isLoading } = useRequestGetProducts(refreshProductsFlag);
 
-    fetch("http://localhost:3000/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-      body: JSON.stringify(newProduct),
-    })
-      .then((res) => res.json())
-      .then((createdProduct) => {
-        console.log("Created product:", createdProduct);
-        setRefreshProducts(!refreshProducts);
-      })
-      .finally(() => {
-        setIsUpdating(false);
-      });
-  };
+  const { isCreating, requestAddProduct } =
+    useRequestAddProduct(refreshProducts);
 
-  const handleUpdateProduct = (productId) => {
-    console.log("Updating product...", productId);
-    setIsUpdating(true);
+  const { isUpdating, requestUpdateProduct } = useRequestUpdateProduct(
+    products,
+    refreshProducts,
+  );
 
-    const selectedProduct = products.find((p) => p.id === productId);
-    console.log("Selected product:", selectedProduct);
+  const { isDeleting, requestDeleteProduct } = useRequestDeleteProduct(
+    products,
+    refreshProducts,
+  );
 
-    fetch(`http://localhost:3000/products/${productId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-      body: JSON.stringify({
-        ...selectedProduct,
-        price: selectedProduct.price - Math.floor(Math.random() * 10) + 1,
-      }),
-    })
-      .then((res) => res.json())
-      .then((updatedProduct) => {
-        console.log("Updated product:", updatedProduct);
-        setRefreshProducts(!refreshProducts);
-      })
-      .finally(() => {
-        setIsUpdating(false);
-      });
-  };
-
-  const handleDeleteProduct = (productId) => {
-    console.log("Deleting product...", productId);
-    setIsUpdating(true);
-
-    const selectedProduct = products.find((p) => p.id === productId);
-    console.log("Selected product:", selectedProduct);
-
-    fetch(`http://localhost:3000/products/${productId}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-    })
-      .then((res) => {
-        console.log("Deleted product res:", res);
-        setRefreshProducts(!refreshProducts);
-      })
-      .finally(() => {
-        setIsUpdating(false);
-      });
-  };
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetch("http://localhost:3000/products")
-      .then((responce) => responce.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [refreshProducts]);
   return (
     <div className={styles.App}>
       <div className={styles.header}>
         <h1>Products</h1>
-        <button disabled={isUpdating} onClick={handleAddProduct}>
+        <button disabled={isCreating} onClick={requestAddProduct}>
           Add new
         </button>
       </div>
@@ -105,16 +44,16 @@ function App() {
                 <b>{product.name}</b>
                 <div className={styles.productActions}>
                   <button
-                    disabled={isUpdating}
-                    onClick={() => handleUpdateProduct(product.id)}
+                    disabled={isDeleting || isUpdating}
+                    onClick={() => requestUpdateProduct(product.id)}
                   >
                     <span role="img" aria-label="update">
                       🔄
                     </span>
                   </button>
                   <button
-                    disabled={isUpdating}
-                    onClick={() => handleDeleteProduct(product.id)}
+                    disabled={isDeleting || isUpdating}
+                    onClick={() => requestDeleteProduct(product.id)}
                   >
                     <span role="img" aria-label="delete">
                       🗑️
